@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Playlist } from "@/lib/Playlist";
 import { Song } from "@/lib/Song";
 import AddSongForm, { Placement } from "./AddSongForm";
+import ImportAudio from "./ImportAudio";
 import NowPlaying from "./NowPlaying";
 import SongList from "./SongList";
 
@@ -25,6 +26,10 @@ export default function Player() {
 
     if (playlist.current === null) playlist.current = playlist.head;
     sync();
+  }
+
+  async function handleImport(files: File[]) {
+    throw new Error("Not implemented");
   }
 
   function handleRemove(id: string) {
@@ -59,6 +64,7 @@ export default function Player() {
           onPrevious={handlePrevious}
           onNext={handleNext}
         />
+        <ImportAudio onFiles={handleImport} />
         <AddSongForm size={songs.length} onAdd={handleAdd} />
       </div>
       <SongList
