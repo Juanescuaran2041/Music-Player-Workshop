@@ -1,12 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #1b1a2e;
-  --surface: #26254a;
-  --foreground: #f1efff;
-  --muted: #a9a6cf;
-  --accent: #8b7cf6;
-  --accent-hover: #a094ff;
+  --background: #141c33;
+  --surface: #1f2a4a;
+  --foreground: #eef3ff;
+  --muted: #98a4c7;
+  --accent: #22c1d4;
+  --accent-hover: #5ddbe9;
+  --on-accent: #08202b;
+  --brand-gradient: linear-gradient(
+    135deg,
+    #2f9bff 0%,
+    #9b5cf6 35%,
+    #ec4899 70%,
+    #ff8a3d 100%
+  );
 }
 
 @theme inline {
@@ -16,15 +24,30 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: radial-gradient(circle at top, #2e2b5c 0%, var(--background) 60%);
+  background:
+    radial-gradient(circle at 15% 0%, rgb(34 193 212 / 0.2), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgb(236 72 153 / 0.16), transparent 45%),
+    var(--background);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.bg-brand {
+  background: var(--brand-gradient);
+}
+
+.text-brand {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .field {
@@ -51,7 +74,7 @@ body {
   background: var(--accent);
   padding: 0.75rem 1.5rem;
   font-weight: 600;
-  color: #14122b;
+  color: var(--on-accent);
   transition: background 0.15s;
 }
 

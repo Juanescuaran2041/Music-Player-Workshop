@@ -20,7 +20,7 @@ export default function NowPlaying({
 }: Props) {
   return (
     <section className="rounded-3xl bg-surface/80 p-6 ring-1 ring-white/10">
-      <div className="flex aspect-square items-center justify-center rounded-2xl bg-linear-to-br from-accent to-pink-400 shadow-xl shadow-black/30">
+      <div className="flex aspect-square items-center justify-center rounded-2xl bg-brand shadow-xl shadow-black/30">
         <svg
           viewBox="0 0 24 24"
           className="h-1/3 w-1/3 text-white/80"
