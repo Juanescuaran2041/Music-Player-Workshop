@@ -1,43 +1,43 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { crearClienteServidor } from "@/lib/supabase/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
-export type EstadoAuth = { error?: string; mensaje?: string };
+export type AuthState = { error?: string; message?: string };
 
-export async function iniciarSesion(
-  _previo: EstadoAuth,
-  datos: FormData,
-): Promise<EstadoAuth> {
-  const supabase = await crearClienteServidor();
+export async function signIn(
+  _prev: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const supabase = await createServerSupabase();
   const { error } = await supabase.auth.signInWithPassword({
-    email: String(datos.get("email")),
-    password: String(datos.get("password")),
+    email: String(formData.get("email")),
+    password: String(formData.get("password")),
   });
 
-  if (error) return { error: "Correo o contraseña incorrectos" };
+  if (error) return { error: "Incorrect email or password" };
   redirect("/");
 }
 
-export async function registrarse(
-  _previo: EstadoAuth,
-  datos: FormData,
-): Promise<EstadoAuth> {
-  const supabase = await crearClienteServidor();
+export async function signUp(
+  _prev: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.signUp({
-    email: String(datos.get("email")),
-    password: String(datos.get("password")),
+    email: String(formData.get("email")),
+    password: String(formData.get("password")),
   });
 
   if (error) return { error: error.message };
   if (!data.session) {
-    return { mensaje: "Revisa tu correo para confirmar la cuenta" };
+    return { message: "Check your email to confirm your account" };
   }
   redirect("/");
 }
 
-export async function cerrarSesion() {
-  const supabase = await crearClienteServidor();
+export async function signOut() {
+  const supabase = await createServerSupabase();
   await supabase.auth.signOut();
   redirect("/login");
 }

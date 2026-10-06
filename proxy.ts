@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
-  let respuesta = NextResponse.next({ request });
+  let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,13 +10,13 @@ export async function proxy(request: NextRequest) {
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
-        setAll: (cookiesNuevas) => {
-          cookiesNuevas.forEach(({ name, value }) =>
+        setAll: (newCookies) => {
+          newCookies.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );
-          respuesta = NextResponse.next({ request });
-          cookiesNuevas.forEach(({ name, value, options }) =>
-            respuesta.cookies.set(name, value, options),
+          response = NextResponse.next({ request });
+          newCookies.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
           );
         },
       },
@@ -27,16 +27,16 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const enLogin = request.nextUrl.pathname.startsWith("/login");
+  const onLogin = request.nextUrl.pathname.startsWith("/login");
 
-  if (!user && !enLogin) {
+  if (!user && !onLogin) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  if (user && enLogin) {
+  if (user && onLogin) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return respuesta;
+  return response;
 }
 
 export const config = {

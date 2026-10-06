@@ -1,19 +1,19 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export async function crearClienteServidor() {
-  const almacen = await cookies();
+export async function createServerSupabase() {
+  const cookieStore = await cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll: () => almacen.getAll(),
-        setAll: (cookiesNuevas) => {
+        getAll: () => cookieStore.getAll(),
+        setAll: (newCookies) => {
           try {
-            cookiesNuevas.forEach(({ name, value, options }) =>
-              almacen.set(name, value, options),
+            newCookies.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options),
             );
           } catch {}
         },
