@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Twinbeat",
-  description: "A music player built on a doubly linked list",
+  title: "Spyre",
+  description: "Spyre - Spy Audio Playback",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

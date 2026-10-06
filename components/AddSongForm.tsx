@@ -82,7 +82,7 @@ export default function AddSongForm({ size, onAdd }: Props) {
             onClick={() => setPlacement(value)}
             className={`flex-1 rounded-full py-2 text-sm transition-colors ${
               placement === value
-                ? "bg-accent font-semibold text-[#14122b]"
+                ? "bg-accent font-semibold text-on-accent"
                 : "text-muted hover:text-foreground"
             }`}
           >
