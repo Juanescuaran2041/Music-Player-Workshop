@@ -1,4 +1,5 @@
 import { signOut } from "@/app/login/actions";
+import Player from "@/components/Player";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -8,12 +9,19 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 p-6">
-      <h1 className="text-3xl font-bold">Music Player</h1>
-      <p className="text-muted">{user?.email}</p>
-      <form action={signOut}>
-        <button className="btn-primary">Sign out</button>
-      </form>
-    </main>
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6">
+      <header className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight">Twinbeat</h1>
+        <div className="flex items-center gap-4">
+          <span className="hidden text-sm text-muted sm:block">
+            {user?.email}
+          </span>
+          <form action={signOut}>
+            <button className="btn-ghost">Sign out</button>
+          </form>
+        </div>
+      </header>
+      <Player />
+    </div>
   );
 }
