@@ -1,4 +1,5 @@
 import { signOut } from "@/app/login/actions";
+import Player from "@/components/Player";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -20,6 +21,7 @@ export default async function Home() {
           </form>
         </div>
       </header>
+      <Player />
     </div>
   );
 }
