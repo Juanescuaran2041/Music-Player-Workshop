@@ -58,27 +58,50 @@ export async function searchSpotify(query: string): Promise<Song[]> {
     );
 }
 
+async function errorDetail(response: Response): Promise<string> {
+  try {
+    const body = await response.json();
+    return body?.error?.message ?? "";
+  } catch {
+    return "";
+  }
+}
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Starts a track on the browser player created with the Web Playback SDK
 export async function playOnDevice(
   deviceId: string,
   uri: string,
 ): Promise<void> {
-  const request = () =>
+  const play = () =>
     spotifyFetch(`/me/player/play?device_id=${deviceId}`, {
       method: "PUT",
       body: JSON.stringify({ uris: [uri] }),
     });
 
-  let response = await request();
-  if (response.status === 404) {
-    // the device can take a moment to register right after connecting
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    response = await request();
+  let response = await play();
+
+  // Right after connecting, Spotify may not know the device yet and answers
+  // 404. Transferring playback to it activates the device, then we retry.
+  for (let attempt = 1; response.status === 404 && attempt <= 3; attempt++) {
+    await spotifyFetch("/me/player", {
+      method: "PUT",
+      body: JSON.stringify({ device_ids: [deviceId], play: false }),
+    });
+    await wait(600 * attempt);
+    response = await play();
   }
+
   if (response.status === 403) {
     throw new SpotifyError("Spotify Premium is required to play full songs.");
   }
   if (!response.ok) {
-    throw new SpotifyError(`Spotify could not play this song (${response.status}).`);
+    const detail = await errorDetail(response);
+    throw new SpotifyError(
+      `Spotify could not play this song (${response.status}${
+        detail ? `: ${detail}` : ""
+      }).`,
+    );
   }
 }
