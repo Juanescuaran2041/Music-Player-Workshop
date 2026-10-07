@@ -201,7 +201,7 @@ export default function Player() {
           onError={handlePlayerError}
         />
         {notice && (
-          <p role="status" className="text-center text-sm text-rose-300">
+          <p role="status" className="text-center text-sm text-rose-600">
             {notice}
           </p>
         )}

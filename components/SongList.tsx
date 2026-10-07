@@ -18,7 +18,7 @@ export default function SongList({
   onRemove,
 }: Props) {
   return (
-    <section className="rounded-3xl bg-surface/80 p-4 ring-1 ring-white/10 sm:p-6">
+    <section className="rounded-3xl bg-surface/80 p-4 ring-1 ring-foreground/10 sm:p-6">
       <div className="mb-4 flex items-baseline justify-between">
         <h2 className="text-lg font-semibold">Queue</h2>
         <span className="text-sm text-muted">
@@ -40,7 +40,7 @@ export default function SongList({
                 className={`group flex items-center gap-4 rounded-xl px-4 py-3 transition-colors ${
                   active
                     ? "bg-accent/20 ring-1 ring-accent/40"
-                    : "hover:bg-white/5"
+                    : "hover:bg-foreground/5"
                 }`}
               >
                 <span className="flex w-6 justify-end text-sm text-muted">
@@ -85,7 +85,7 @@ export default function SongList({
                 <button
                   onClick={() => onRemove(song.id)}
                   aria-label={`Remove ${song.title}`}
-                  className="rounded-full p-2 text-muted transition hover:bg-white/10 hover:text-rose-300 focus-visible:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                  className="rounded-full p-2 text-muted transition hover:bg-foreground/10 hover:text-rose-600 focus-visible:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                 >
                   <svg
                     viewBox="0 0 24 24"

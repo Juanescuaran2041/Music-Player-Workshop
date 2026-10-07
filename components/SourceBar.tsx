@@ -23,8 +23,8 @@ export default function SourceBar({ source, connected, onSourceChange }: Props) 
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-surface/80 p-3 ring-1 ring-white/10">
-      <div className="flex gap-1 rounded-full bg-white/5 p-1">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-surface/80 p-3 ring-1 ring-foreground/10">
+      <div className="flex gap-1 rounded-full bg-foreground/5 p-1">
         {sources.map(({ value, label }) => (
           <button
             key={value}
@@ -43,7 +43,7 @@ export default function SourceBar({ source, connected, onSourceChange }: Props) 
       {source === "spotify" &&
         (connected ? (
           <div className="flex items-center gap-3 text-sm">
-            <span className="text-emerald-300">Spotify connected</span>
+            <span className="text-emerald-600">Spotify connected</span>
             <button onClick={disconnectSpotify} className="btn-ghost">
               Disconnect
             </button>
@@ -54,7 +54,7 @@ export default function SourceBar({ source, connected, onSourceChange }: Props) 
           </button>
         ))}
 
-      {error && <p className="w-full text-sm text-rose-300">{error}</p>}
+      {error && <p className="w-full text-sm text-rose-600">{error}</p>}
     </div>
   );
 }

@@ -127,7 +127,7 @@ export default function YouTubeEmbed({
 
   return (
     <div
-      className={`aspect-video overflow-hidden rounded-2xl bg-black ring-1 ring-white/10 ${
+      className={`aspect-video overflow-hidden rounded-2xl bg-black ring-1 ring-foreground/10 ${
         videoId ? "" : "hidden"
       }`}
     >

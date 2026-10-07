@@ -24,10 +24,10 @@ export default function SpotifyCallbackPage() {
 
   return (
     <main className="flex flex-1 items-center justify-center p-6">
-      <div className="w-full max-w-sm rounded-3xl bg-surface p-8 text-center shadow-2xl shadow-black/30 ring-1 ring-white/10">
+      <div className="w-full max-w-sm rounded-3xl bg-surface p-8 text-center shadow-2xl shadow-slate-900/10 ring-1 ring-foreground/10">
         {error ? (
           <>
-            <p className="mb-6 text-rose-300">{error}</p>
+            <p className="mb-6 text-rose-600">{error}</p>
             <button onClick={() => router.replace("/")} className="btn-primary">
               Back to Orbitune
             </button>

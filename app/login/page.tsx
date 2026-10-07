@@ -4,7 +4,7 @@ import LoginForm from "@/components/LoginForm";
 export default function LoginPage() {
   return (
     <main className="flex flex-1 items-center justify-center p-6">
-      <div className="w-full max-w-sm rounded-3xl bg-surface p-8 shadow-2xl shadow-black/30 ring-1 ring-white/10">
+      <div className="w-full max-w-sm rounded-3xl bg-surface p-8 shadow-2xl shadow-slate-900/10 ring-1 ring-foreground/10">
         <Image
           src="/brand/mark.jpg"
           alt=""

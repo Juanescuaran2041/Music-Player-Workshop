@@ -16,7 +16,7 @@ type Props = {
 };
 
 const controlClass =
-  "flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-foreground transition hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10";
+  "flex h-12 w-12 items-center justify-center rounded-full bg-foreground/10 text-foreground transition hover:bg-foreground/20 disabled:opacity-30 disabled:hover:bg-foreground/10";
 
 export default function NowPlaying({
   song,
@@ -33,7 +33,7 @@ export default function NowPlaying({
   const canSeek = Boolean(song?.url || song?.videoId) && duration > 0;
 
   return (
-    <section className="rounded-3xl bg-surface/80 p-6 ring-1 ring-white/10">
+    <section className="rounded-3xl bg-surface/80 p-6 ring-1 ring-foreground/10">
       <div className="relative mx-auto aspect-square w-full max-w-72">
         <div
           className="vinyl disc-spin absolute inset-[6%] rounded-full shadow-2xl shadow-black/50"
@@ -111,7 +111,7 @@ export default function NowPlaying({
           onClick={onTogglePlay}
           disabled={!song}
           aria-label={isPlaying ? "Pause" : "Play"}
-          className="flex h-16 w-16 items-center justify-center rounded-full bg-brand text-white shadow-lg shadow-black/30 transition hover:scale-105 disabled:opacity-30 disabled:hover:scale-100"
+          className="flex h-16 w-16 items-center justify-center rounded-full bg-brand text-white shadow-lg shadow-slate-900/10 transition hover:scale-105 disabled:opacity-30 disabled:hover:scale-100"
         >
           {isPlaying ? (
             <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">

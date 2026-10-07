@@ -48,7 +48,7 @@ export default function AddSongForm({ size, onAdd }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-3xl bg-surface/80 p-6 ring-1 ring-white/10"
+      className="flex flex-col gap-3 rounded-3xl bg-surface/80 p-6 ring-1 ring-foreground/10"
     >
       <h2 className="text-lg font-semibold">Add a song</h2>
 
@@ -74,7 +74,7 @@ export default function AddSongForm({ size, onAdd }: Props) {
         className="field"
       />
 
-      <div className="flex gap-1 rounded-full bg-white/5 p-1">
+      <div className="flex gap-1 rounded-full bg-foreground/5 p-1">
         {placements.map(({ value, label }) => (
           <button
             key={value}
@@ -104,7 +104,7 @@ export default function AddSongForm({ size, onAdd }: Props) {
         />
       )}
 
-      {error && <p className="text-sm text-rose-300">{error}</p>}
+      {error && <p className="text-sm text-rose-600">{error}</p>}
 
       <button type="submit" className="btn-primary">
         Add song

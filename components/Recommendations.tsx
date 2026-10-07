@@ -53,7 +53,7 @@ export default function Recommendations({
     .slice(0, 8);
 
   return (
-    <section className="rounded-3xl bg-surface/80 p-4 ring-1 ring-white/10 sm:p-6">
+    <section className="rounded-3xl bg-surface/80 p-4 ring-1 ring-foreground/10 sm:p-6">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Made for you</h2>
         <p className="truncate text-sm text-muted">
@@ -70,7 +70,7 @@ export default function Recommendations({
       ) : loading ? (
         <p className="py-8 text-center text-muted">Finding songs for you...</p>
       ) : result?.error ? (
-        <p className="py-8 text-center text-sm text-rose-300">
+        <p className="py-8 text-center text-sm text-rose-600">
           {result.error}
         </p>
       ) : suggestions.length === 0 ? (
