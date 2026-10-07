@@ -27,9 +27,12 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const onLogin = request.nextUrl.pathname.startsWith("/login");
+  const { pathname } = request.nextUrl;
+  const onLogin = pathname.startsWith("/login");
+  // The callback has to be reachable before the session exists
+  const onAuthCallback = pathname.startsWith("/auth/");
 
-  if (!user && !onLogin) {
+  if (!user && !onLogin && !onAuthCallback) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   if (user && onLogin) {

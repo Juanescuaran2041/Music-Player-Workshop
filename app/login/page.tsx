@@ -1,7 +1,13 @@
 import Image from "next/image";
 import LoginForm from "@/components/LoginForm";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+
   return (
     <main className="relative isolate flex flex-1 items-center justify-center overflow-hidden p-6">
       <Image
@@ -27,7 +33,13 @@ export default function LoginPage() {
         <p className="mb-8 text-center text-muted">
           Sign in to see your songs
         </p>
-        <LoginForm />
+        <LoginForm
+          callbackError={
+            error
+              ? "That link expired or sign-in failed. Try again."
+              : undefined
+          }
+        />
       </div>
     </main>
   );

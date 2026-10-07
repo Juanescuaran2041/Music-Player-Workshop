@@ -1,73 +1,151 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { signIn, signUp } from "@/app/login/actions";
+import { signIn, signInWithGoogle, signUp } from "@/app/login/actions";
+import { passwordRules } from "@/lib/password";
 
-export default function LoginForm() {
+type Props = {
+  // Set when the Google or email confirmation callback failed
+  callbackError?: string;
+};
+
+export default function LoginForm({ callbackError }: Props) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [state, action, pending] = useActionState(
     isSignUp ? signUp : signIn,
     {},
   );
+  const [googleState, googleAction, googlePending] = useActionState(
+    signInWithGoogle,
+    {},
+  );
+  const [password, setPassword] = useState("");
+  const strongPassword = passwordRules.every((rule) => rule.test(password));
+  const error = state.error ?? googleState.error ?? callbackError;
 
   return (
-    <form action={action} className="flex flex-col gap-4">
-      {isSignUp && (
+    <div className="flex flex-col gap-4">
+      <form action={googleAction}>
+        <button
+          type="submit"
+          disabled={googlePending}
+          className="btn-ghost flex w-full items-center justify-center gap-2"
+        >
+          <GoogleIcon />
+          {googlePending ? "Redirecting..." : "Continue with Google"}
+        </button>
+      </form>
+
+      <div className="flex items-center gap-3 text-xs text-muted">
+        <span className="h-px flex-1 bg-foreground/10" />
+        or
+        <span className="h-px flex-1 bg-foreground/10" />
+      </div>
+
+      <form action={action} className="flex flex-col gap-4">
+        {isSignUp && (
+          <input
+            name="nickname"
+            placeholder="Nickname"
+            minLength={2}
+            maxLength={24}
+            autoComplete="nickname"
+            required
+            className="field"
+          />
+        )}
+        {isSignUp && (
+          <input
+            name="name"
+            placeholder="Name"
+            minLength={2}
+            maxLength={64}
+            autoComplete="name"
+            required
+            className="field"
+          />
+        )}
         <input
-          name="nickname"
-          placeholder="Nickname"
-          minLength={2}
-          maxLength={24}
-          autoComplete="nickname"
+          name="email"
+          type="email"
+          placeholder="Email"
           required
           className="field"
         />
-      )}
-      {isSignUp && (
         <input
-          name="name"
-          placeholder="Name"
-          minLength={2}
-          maxLength={64}
-          autoComplete="name"
+          name="password"
+          type="password"
+          placeholder="Password"
+          autoComplete={isSignUp ? "new-password" : "current-password"}
           required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="field"
         />
-      )}
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        required
-        className="field"
+
+        {/* Older accounts may have weaker passwords, so only sign-up checks */}
+        {isSignUp && (
+          <ul className="grid gap-1 text-sm">
+            {passwordRules.map((rule) => {
+              const passed = rule.test(password);
+              return (
+                <li
+                  key={rule.label}
+                  className={passed ? "text-emerald-600" : "text-muted"}
+                >
+                  {passed ? "✓" : "○"} {rule.label}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {state.message && (
+          <p className="text-sm text-emerald-600">{state.message}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={pending || (isSignUp && !strongPassword)}
+          className="btn-primary"
+        >
+          {pending ? "Loading..." : isSignUp ? "Create account" : "Sign in"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="text-sm text-muted transition-colors hover:text-foreground"
+        >
+          {isSignUp
+            ? "Already have an account? Sign in"
+            : "Don't have an account? Sign up"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="size-5" aria-hidden="true">
+      <path
+        fill="#FFC107"
+        d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"
       />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        minLength={6}
-        required
-        className="field"
+      <path
+        fill="#FF3D00"
+        d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"
       />
-
-      {state.error && <p className="text-sm text-rose-600">{state.error}</p>}
-      {state.message && (
-        <p className="text-sm text-emerald-600">{state.message}</p>
-      )}
-
-      <button type="submit" disabled={pending} className="btn-primary">
-        {pending ? "Loading..." : isSignUp ? "Create account" : "Sign in"}
-      </button>
-
-      <button
-        type="button"
-        onClick={() => setIsSignUp(!isSignUp)}
-        className="text-sm text-muted transition-colors hover:text-foreground"
-      >
-        {isSignUp
-          ? "Already have an account? Sign in"
-          : "Don't have an account? Sign up"}
-      </button>
-    </form>
+      <path
+        fill="#4CAF50"
+        d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"
+      />
+      <path
+        fill="#1976D2"
+        d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"
+      />
+    </svg>
   );
 }
