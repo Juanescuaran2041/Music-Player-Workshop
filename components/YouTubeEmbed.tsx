@@ -15,7 +15,7 @@ type Props = {
   onTime: (seconds: number) => void;
   onDuration: (seconds: number) => void;
   onEnded: () => void;
-  onError: () => void;
+  onError: (code: number) => void;
 };
 
 export default function YouTubeEmbed({
@@ -85,7 +85,7 @@ export default function YouTubeEmbed({
             else if (data === YT_STATE.PAUSED) handlers.onPlayingChange(false);
             else if (data === YT_STATE.ENDED) handlers.onEnded();
           },
-          onError: () => handlersRef.current.onError(),
+          onError: ({ data }) => handlersRef.current.onError(data),
         },
       });
     });

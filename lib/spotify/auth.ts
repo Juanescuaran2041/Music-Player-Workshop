@@ -105,6 +105,14 @@ export async function startSpotifyLogin(): Promise<void> {
     throw new SpotifyError("Missing NEXT_PUBLIC_SPOTIFY_CLIENT_ID in .env");
   }
 
+  // Spotify only accepts loopback IPs (not "localhost") as http redirect URIs
+  const { protocol, hostname, port } = window.location;
+  if (protocol === "http:" && hostname !== "127.0.0.1" && hostname !== "[::1]") {
+    throw new SpotifyError(
+      `Open the app at http://127.0.0.1:${port || 80} instead of ${hostname} to connect Spotify.`,
+    );
+  }
+
   const verifier = randomString(96);
   const state = randomString(24);
   const challenge = base64url(
