@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars --
-   The methods below are stubs. Remove this line once they are implemented. */
+
 import { Playlist } from "./Playlist";
 
-// One saved playlist inside the library. Each node holds its own doubly
-// linked list of songs (Playlist) and points to the next playlist.
 export class LibraryNode {
   next: LibraryNode | null = null;
   playlist: Playlist = new Playlist();
@@ -14,63 +11,109 @@ export class LibraryNode {
   ) {}
 }
 
-// Singly linked list with every saved playlist of the user, in the order
-// they were created. The app only walks it forwards, so nodes do not need a
-// prev pointer.
 export class Library {
   head: LibraryNode | null = null;
   tail: LibraryNode | null = null;
   size = 0;
 
-  // Creates a playlist with this id and name and links it at the END of the
-  // list, then returns the new node.
-  // - Empty list: head and tail both point to the new node.
-  // - Otherwise: the current tail points to it and it becomes the new tail.
-  // - Do not forget to update size.
+  // creates a new node at the end of the singly linked list
   create(id: string, name: string): LibraryNode {
-    // TODO: implement. For now the node is returned but never linked.
-    return new LibraryNode(id, name);
+    
+    const new_node = new LibraryNode(id, name);
+
+    if (this.size === 0){
+      this.head = new_node;
+      this.tail = new_node;
+    } else {
+      this.tail!.next = new_node;
+      this.tail = new_node;
+    }
+    this.size++;
+
+    return new_node;
   }
 
-  // Walks the list from head and returns the node with this id, or null when
-  // there is none.
+  // searches for a node by id
   find(id: string): LibraryNode | null {
-    // TODO: implement
+    
+    let current = this.head;
+    
+    while (current !== null) {
+      if (current.id === id) {
+        return current;
+      }
+      current = current.next;
+    }
+
     return null;
   }
-
-  // Same as find, but by name and ignoring upper/lower case, so the app can
-  // stop the user from creating "Rock" twice ("rock" counts as the same).
-  // Tip: name.trim().toLowerCase()
+  // searches for a node by name, ignoring case and whitespace
   findByName(name: string): LibraryNode | null {
-    // TODO: implement
+    let current = this.head;
+    const targetName = name.trim().toLowerCase();
+
+    while (current !== null) {
+      if (current.name.trim().toLowerCase() === targetName) {
+        return current;
+      }
+      current = current.next;
+    }
+
     return null;
   }
 
-  // Changes the name of the playlist with this id. Returns true when it was
-  // found and renamed, false otherwise. You can reuse find().
   rename(id: string, name: string): boolean {
-    // TODO: implement
+    const songNode = this.find(id);
+    
+    if (songNode) {
+      songNode.name = name;
+      return true;
+    }
+
     return false;
   }
 
-  // Unlinks the playlist with this id and returns it, or null when there is
-  // none. In a singly linked list you need the node BEFORE the one you remove.
-  // Cases to cover:
-  // - Removing the head: head moves to the next node.
-  // - Removing the tail: tail moves to the node before it.
-  // - Removing the only node: head and tail become null.
-  // - Removing from the middle: the node before skips over it.
-  // Clear the removed node's next pointer and update size.
+  //removes a node from the singly linked list
   remove(id: string): LibraryNode | null {
-    // TODO: implement
+    let prev: LibraryNode | null = null;
+    let current = this.head;
+
+    while (current !== null) {
+      if (current.id === id){
+        //evaluate if the node to be removed is the head or tail and update pointers
+        if (prev === null) {
+          this.head = current.next;
+        } else {
+          prev.next = current.next;
+        }
+        // if the current node is the tail, the prev node becomes the new tail
+        if (current === this.tail) {
+          this.tail = prev;
+        }
+        // disconnect the removed node from the list
+        current.next = null; 
+        this.size--;
+        return current;
+      }
+      //increments 
+      prev = current;
+      current = current.next;
+    }
+    
     return null;
   }
 
-  // Returns every node from head to tail as an array, so the interface can
-  // draw them. Same idea as Playlist.toArray().
+  // returns an array of all nodes
   toArray(): LibraryNode[] {
-    // TODO: implement
-    return [];
+    const nodes: LibraryNode[] = [];
+    let current = this.head;
+
+    while (current !== null){
+      nodes.push(current);
+      current = current.next;
+    }
+
+    return nodes;
+
   }
 }
