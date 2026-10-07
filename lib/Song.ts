@@ -8,5 +8,6 @@ export class Song {
     public artist: string,
     public duration: number,
     public url: string,
+    public cover: string = "",
   ) {}
 }
