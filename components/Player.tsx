@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getAudioDuration } from "@/lib/audio";
-import { Source } from "@/lib/music";
+import { songSourceId, Source } from "@/lib/music";
 import { Playlist } from "@/lib/Playlist";
 import { Song } from "@/lib/Song";
 import { useSpotifyConnected } from "@/lib/spotify/auth";
@@ -121,12 +121,29 @@ export default function Player() {
     sync();
   }
 
+  // The same Spotify/YouTube track should only appear once in the queue
+  function findQueued(song: Song): Song | undefined {
+    const id = songSourceId(song);
+    return id
+      ? playlistRef.current.toArray().find((s) => songSourceId(s) === id)
+      : undefined;
+  }
+
   function handleExternalAdd(song: Song) {
+    if (findQueued(song)) {
+      setNotice("That song is already in your queue.");
+      return;
+    }
     enqueue(copyOf(song), "end");
     sync();
   }
 
   function handleExternalPlay(song: Song) {
+    const queued = findQueued(song);
+    if (queued) {
+      handleSelect(queued);
+      return;
+    }
     const copy = copyOf(song);
     enqueue(copy, "end");
     handleSelect(copy);
