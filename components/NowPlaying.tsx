@@ -8,6 +8,7 @@ type Props = {
   total: number;
   isPlaying: boolean;
   currentTime: number;
+  duration: number;
   onTogglePlay: () => void;
   onSeek: (seconds: number) => void;
   onPrevious: () => void;
@@ -23,12 +24,13 @@ export default function NowPlaying({
   total,
   isPlaying,
   currentTime,
+  duration,
   onTogglePlay,
   onSeek,
   onPrevious,
   onNext,
 }: Props) {
-  const canSeek = Boolean(song?.url) && (song?.duration ?? 0) > 0;
+  const canSeek = Boolean(song?.url || song?.videoId) && duration > 0;
 
   return (
     <section className="rounded-3xl bg-surface/80 p-6 ring-1 ring-white/10">
@@ -81,16 +83,16 @@ export default function NowPlaying({
         <input
           type="range"
           min={0}
-          max={song?.duration || 1}
+          max={duration || 1}
           step={0.1}
-          value={Math.min(currentTime, song?.duration || 1)}
+          value={Math.min(currentTime, duration || 1)}
           onChange={(e) => onSeek(Number(e.target.value))}
           disabled={!canSeek}
           aria-label="Seek"
           className="seek flex-1"
         />
         <span className="w-9 tabular-nums">
-          {formatDuration(song?.duration ?? 0)}
+          {formatDuration(duration)}
         </span>
       </div>
 
