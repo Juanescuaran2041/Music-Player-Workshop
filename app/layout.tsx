@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spyre",
-  description: "Spyre - Spy Audio Playback",
+  title: "Orbitune",
+  description: "Orbitune - Spin your sound",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
