@@ -28,7 +28,7 @@ export default function Player() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [streamDuration, setStreamDuration] = useState(0);
-  const [source, setSource] = useState<Source>("spotify");
+  const [source, setSource] = useState<Source>("youtube");
   const connected = useSpotifyConnected();
   const [notice, setNotice] = useState("");
 

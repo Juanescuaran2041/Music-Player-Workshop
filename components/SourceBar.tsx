@@ -11,8 +11,8 @@ type Props = {
 };
 
 const sources: { value: Source; label: string }[] = [
-  { value: "spotify", label: "Spotify" },
   { value: "youtube", label: "YouTube" },
+  { value: "spotify", label: "Spotify" },
 ];
 
 export default function SourceBar({ source, connected, onSourceChange }: Props) {
