@@ -1,10 +1,18 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { checkProfile } from "@/lib/profile";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 export type AuthState = { error?: string; message?: string };
+
+// Where Google and the confirmation email send the user back
+async function callbackUrl(): Promise<string> {
+  const headerList = await headers();
+  const origin = headerList.get("origin") ?? `http://${headerList.get("host")}`;
+  return `${origin}/auth/callback`;
+}
 
 export async function signIn(
   _prev: AuthState,
@@ -16,6 +24,9 @@ export async function signIn(
     password: String(formData.get("password")),
   });
 
+  if (error?.code === "email_not_confirmed") {
+    return { error: "Confirm your email first. Check your inbox." };
+  }
   if (error) return { error: "Incorrect email or password" };
   redirect("/");
 }
@@ -33,8 +44,11 @@ export async function signUp(
   const { data, error } = await supabase.auth.signUp({
     email: String(formData.get("email")),
     password: String(formData.get("password")),
-    // Stored in the user's metadata, so no database changes are needed
-    options: { data: { nickname, name } },
+    options: {
+      // Stored in the user's metadata, so no database changes are needed
+      data: { nickname, name },
+      emailRedirectTo: await callbackUrl(),
+    },
   });
 
   if (error) return { error: error.message };
@@ -42,6 +56,17 @@ export async function signUp(
     return { message: "Check your email to confirm your account" };
   }
   redirect("/");
+}
+
+export async function signInWithGoogle(): Promise<AuthState> {
+  const supabase = await createServerSupabase();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: await callbackUrl() },
+  });
+
+  if (error || !data.url) return { error: "Google sign-in is not available" };
+  redirect(data.url);
 }
 
 export async function signOut() {
