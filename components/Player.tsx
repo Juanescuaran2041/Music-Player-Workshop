@@ -193,14 +193,14 @@ export default function Player() {
     : (current?.duration ?? 0);
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[22rem_1fr]">
+    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
       <audio
         ref={audioRef}
         src={current?.url || undefined}
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
         onEnded={handleEnded}
       />
-      <div className="flex flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6">
         <NowPlaying
           song={current}
           position={position}
@@ -241,7 +241,7 @@ export default function Player() {
         <ImportAudio onFiles={handleImport} />
         <AddSongForm size={songs.length} onAdd={handleAdd} />
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6">
         <SourceBar
           source={source}
           connected={connected}

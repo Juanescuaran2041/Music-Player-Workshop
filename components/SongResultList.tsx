@@ -12,11 +12,11 @@ const iconButton =
 
 export default function SongResultList({ songs, onAdd, onPlay }: Props) {
   return (
-    <ul className="grid gap-2 sm:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
       {songs.map((song) => (
         <li
           key={song.id}
-          className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-foreground/5"
+          className="flex min-w-0 items-center gap-3 rounded-xl p-2 transition-colors hover:bg-foreground/5"
         >
           {song.cover ? (
             <img
