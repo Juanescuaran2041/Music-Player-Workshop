@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import { Song } from "@/lib/Song";
 import { formatDuration } from "@/lib/format";
 
 type Props = {
   songs: Song[];
   currentId: string | null;
+  isPlaying: boolean;
   onSelect: (song: Song) => void;
   onRemove: (id: string) => void;
 };
@@ -11,6 +13,7 @@ type Props = {
 export default function SongList({
   songs,
   currentId,
+  isPlaying,
   onSelect,
   onRemove,
 }: Props) {
@@ -40,9 +43,29 @@ export default function SongList({
                     : "hover:bg-white/5"
                 }`}
               >
-                <span className="w-6 text-right text-sm text-muted">
-                  {index + 1}
+                <span className="flex w-6 justify-end text-sm text-muted">
+                  {active ? (
+                    <span
+                      className="flex items-end gap-0.5"
+                      data-playing={isPlaying}
+                      aria-hidden="true"
+                    >
+                      <span className="eq-bar" />
+                      <span className="eq-bar" />
+                      <span className="eq-bar" />
+                    </span>
+                  ) : (
+                    index + 1
+                  )}
                 </span>
+                {song.cover && (
+                  <img
+                    src={song.cover}
+                    alt=""
+                    loading="lazy"
+                    className="h-10 w-10 shrink-0 rounded-lg object-cover"
+                  />
+                )}
                 <button
                   onClick={() => onSelect(song)}
                   className="min-w-0 flex-1 text-left"
