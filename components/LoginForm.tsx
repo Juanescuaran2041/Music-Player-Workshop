@@ -23,6 +23,17 @@ export default function LoginForm() {
           className="field"
         />
       )}
+      {isSignUp && (
+        <input
+          name="name"
+          placeholder="Name"
+          minLength={2}
+          maxLength={64}
+          autoComplete="name"
+          required
+          className="field"
+        />
+      )}
       <input
         name="email"
         type="email"
