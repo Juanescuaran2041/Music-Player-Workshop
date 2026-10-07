@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { signIn, signInWithGoogle, signUp } from "@/app/login/actions";
+import { passwordRules } from "@/lib/password";
 
 type Props = {
   // Set when the Google or email confirmation callback failed
@@ -18,6 +19,8 @@ export default function LoginForm({ callbackError }: Props) {
     signInWithGoogle,
     {},
   );
+  const [password, setPassword] = useState("");
+  const strongPassword = passwordRules.every((rule) => rule.test(password));
   const error = state.error ?? googleState.error ?? callbackError;
 
   return (
@@ -73,17 +76,40 @@ export default function LoginForm({ callbackError }: Props) {
           name="password"
           type="password"
           placeholder="Password"
-          minLength={6}
+          autoComplete={isSignUp ? "new-password" : "current-password"}
           required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="field"
         />
+
+        {/* Older accounts may have weaker passwords, so only sign-up checks */}
+        {isSignUp && (
+          <ul className="grid gap-1 text-sm">
+            {passwordRules.map((rule) => {
+              const passed = rule.test(password);
+              return (
+                <li
+                  key={rule.label}
+                  className={passed ? "text-emerald-600" : "text-muted"}
+                >
+                  {passed ? "✓" : "○"} {rule.label}
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
         {error && <p className="text-sm text-rose-600">{error}</p>}
         {state.message && (
           <p className="text-sm text-emerald-600">{state.message}</p>
         )}
 
-        <button type="submit" disabled={pending} className="btn-primary">
+        <button
+          type="submit"
+          disabled={pending || (isSignUp && !strongPassword)}
+          className="btn-primary"
+        >
           {pending ? "Loading..." : isSignUp ? "Create account" : "Sign in"}
         </button>
 

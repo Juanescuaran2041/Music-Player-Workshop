@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { checkPassword } from "@/lib/password";
 import { checkProfile } from "@/lib/profile";
 import { createServerSupabase } from "@/lib/supabase/server";
 
@@ -37,13 +38,14 @@ export async function signUp(
 ): Promise<AuthState> {
   const nickname = String(formData.get("nickname") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
-  const problem = checkProfile(nickname, name);
+  const password = String(formData.get("password") ?? "");
+  const problem = checkProfile(nickname, name) ?? checkPassword(password);
   if (problem) return { error: problem };
 
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.signUp({
     email: String(formData.get("email")),
-    password: String(formData.get("password")),
+    password,
     options: {
       // Stored in the user's metadata, so no database changes are needed
       data: { nickname, name },
