@@ -10,5 +10,6 @@ export class Song {
     public url: string,
     public cover: string = "",
     public videoId: string = "",
+    public spotifyUri: string = "",
   ) {}
 }
