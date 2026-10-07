@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import AppBackground from "@/components/AppBackground";
 import AppHeader from "@/components/AppHeader";
 import Avatar from "@/components/Avatar";
 import ProfileForm from "@/components/ProfileForm";
@@ -32,10 +33,11 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6">
+      <AppBackground />
       <AppHeader profile={profile} active="profile" />
 
       <div className="mx-auto grid w-full max-w-4xl gap-6 md:grid-cols-[18rem_minmax(0,1fr)]">
-        <section className="flex min-w-0 flex-col items-center gap-3 rounded-3xl bg-surface/80 p-6 text-center ring-1 ring-foreground/10">
+        <section className="card flex min-w-0 flex-col items-center gap-3 p-6 text-center">
           <Avatar label={initials(profile)} size="lg" />
           <div className="min-w-0 max-w-full">
             <h1 className="truncate text-xl font-semibold">
@@ -62,7 +64,7 @@ export default async function ProfilePage() {
           </Link>
         </section>
 
-        <section className="min-w-0 rounded-3xl bg-surface/80 p-6 ring-1 ring-foreground/10 sm:p-8">
+        <section className="card min-w-0 p-6 sm:p-8">
           <h2 className="text-lg font-semibold">Edit your profile</h2>
           <p className="mb-6 mt-1 text-sm text-muted">
             {missing

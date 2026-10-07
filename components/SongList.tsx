@@ -65,7 +65,7 @@ export default function SongList({
   }
 
   return (
-    <section className="rounded-3xl bg-surface/80 p-4 ring-1 ring-foreground/10 sm:p-6">
+    <section className="card p-4 sm:p-6">
       <div className="mb-4 flex items-baseline justify-between">
         <h2 className="text-lg font-semibold">Queue</h2>
         <span className="text-sm text-muted">

@@ -62,6 +62,59 @@ body {
   color: transparent;
 }
 
+/* Panels: same look as before, plus an entrance and a hover highlight */
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.card-rise {
+  animation: card-rise 0.5s ease-out both;
+}
+
+.card {
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 10%, transparent);
+  backdrop-filter: blur(8px);
+  animation: card-rise 0.5s ease-out both;
+  transition: box-shadow 0.25s;
+}
+
+.card:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent),
+    0 16px 32px -20px rgb(28 37 65 / 0.25);
+}
+
+/* Soft pulse around the play button while music is playing */
+@keyframes play-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(14 143 166 / 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgb(14 143 166 / 0);
+  }
+}
+
+.play-glow[data-playing="true"] {
+  animation: play-pulse 1.6s ease-out infinite;
+}
+
+/* Search results and recommendations appear one after another */
+@keyframes result-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.result-in {
+  animation: result-in 0.35s ease-out both;
+}
+
 .field {
   width: 100%;
   border-radius: 0.75rem;
@@ -87,7 +140,14 @@ body {
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   color: var(--on-accent);
-  transition: background 0.15s;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+
+.btn-primary:active:not(:disabled),
+.btn-ghost:active {
+  transform: scale(0.96);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -104,7 +164,7 @@ body {
   font-size: 0.875rem;
   color: var(--muted);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 16%, transparent);
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, background 0.15s, transform 0.1s;
 }
 
 .btn-ghost:hover {
@@ -176,7 +236,11 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .disc-spin {
+  .disc-spin,
+  .card,
+  .card-rise,
+  .play-glow[data-playing="true"],
+  .result-in {
     animation: none;
   }
 }

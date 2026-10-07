@@ -23,7 +23,7 @@ export default function SourceBar({ source, connected, onSourceChange }: Props) 
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-surface/80 p-3 ring-1 ring-foreground/10">
+    <div className="card flex flex-wrap items-center justify-between gap-3 p-3">
       <div className="flex gap-1 rounded-full bg-foreground/5 p-1">
         {sources.map(({ value, label }) => (
           <button
