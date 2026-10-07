@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #141c33;
-  --surface: #1f2a4a;
-  --foreground: #eef3ff;
-  --muted: #98a4c7;
-  --accent: #22c1d4;
-  --accent-hover: #5ddbe9;
-  --on-accent: #08202b;
+  --background: #f3f6ff;
+  --surface: #ffffff;
+  --foreground: #1c2541;
+  --muted: #5d6a8c;
+  --accent: #0e8fa6;
+  --accent-hover: #0a6f82;
+  --on-accent: #ffffff;
   --brand-gradient: linear-gradient(
     135deg,
     #2f9bff 0%,
@@ -31,8 +31,8 @@
 
 body {
   background:
-    radial-gradient(circle at 15% 0%, rgb(34 193 212 / 0.2), transparent 45%),
-    radial-gradient(circle at 85% 0%, rgb(236 72 153 / 0.16), transparent 45%),
+    radial-gradient(circle at 15% 0%, rgb(34 193 212 / 0.22), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgb(236 72 153 / 0.14), transparent 45%),
     var(--background);
   background-attachment: fixed;
   color: var(--foreground);
@@ -53,11 +53,11 @@ body {
 .field {
   width: 100%;
   border-radius: 0.75rem;
-  background: rgb(255 255 255 / 0.06);
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
   padding: 0.75rem 1rem;
   color: var(--foreground);
   outline: none;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 14%, transparent);
   transition: box-shadow 0.15s;
 }
 
@@ -91,11 +91,133 @@ body {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   color: var(--muted);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 16%, transparent);
   transition: color 0.15s, background 0.15s;
 }
 
 .btn-ghost:hover {
   color: var(--foreground);
-  background: rgb(255 255 255 / 0.06);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
 }
+
+/* Vinyl record */
+.vinyl {
+  background: repeating-radial-gradient(
+    circle at center,
+    #0a0d1a 0 2px,
+    #161c33 3px 4px
+  );
+}
+
+.vinyl-sheen {
+  background: conic-gradient(
+    from 20deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.14) 8%,
+    transparent 22%,
+    transparent 50%,
+    rgb(255 255 255 / 0.14) 58%,
+    transparent 72%
+  );
+}
+
+@keyframes disc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.disc-spin {
+  animation: disc-spin 4s linear infinite;
+  animation-play-state: paused;
+}
+
+.disc-spin[data-playing="true"] {
+  animation-play-state: running;
+}
+
+.tonearm {
+  position: absolute;
+  top: 2%;
+  right: 4%;
+  width: 3px;
+  height: 52%;
+  border-radius: 9999px;
+  background: linear-gradient(#6b7799, #2b3557);
+  transform-origin: top center;
+  transform: rotate(-24deg);
+  transition: transform 0.6s ease;
+}
+
+.tonearm[data-playing="true"] {
+  transform: rotate(14deg);
+}
+
+.tonearm-head {
+  position: absolute;
+  bottom: -6px;
+  left: -4px;
+  width: 11px;
+  height: 16px;
+  border-radius: 3px;
+  background: #2b3557;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disc-spin {
+    animation: none;
+  }
+}
+
+/* Seek bar */
+.seek {
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--foreground) 18%, transparent);
+  cursor: pointer;
+}
+
+.seek::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--accent-hover);
+}
+
+.seek::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 9999px;
+  background: var(--accent-hover);
+}
+
+.seek:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+/* Equalizer bars */
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.eq-bar {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--accent-hover);
+  transform-origin: bottom;
+  animation: eq 0.9s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+[data-playing="true"] .eq-bar {
+  animation-play-state: running;
+}
+
+.eq-bar:nth-child(2) { animation-delay: -0.3s; }
+.eq-bar:nth-child(3) { animation-delay: -0.6s; }
