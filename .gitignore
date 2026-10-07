@@ -40,3 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 !.env.example
+
+# local AI assistant instruction files (never committed)
+AGENTS.md
+CLAUDE.md
+.claude/
