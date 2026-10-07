@@ -5,6 +5,7 @@ import { getAudioDuration } from "@/lib/audio";
 import { songSourceId, Source } from "@/lib/music";
 import { Playlist } from "@/lib/Playlist";
 import { Song } from "@/lib/Song";
+import { youtubeErrorMessage } from "@/lib/youtubePlayer";
 import { useSpotifyConnected } from "@/lib/spotify/auth";
 import AddSongForm, { Placement } from "./AddSongForm";
 import ImportAudio from "./ImportAudio";
@@ -164,10 +165,13 @@ export default function Player() {
     else setIsPlaying(false);
   }
 
-  function handleEmbedError() {
-    if (current?.next) handleNext();
+  function handleEmbedError(code: number) {
+    const skipping = Boolean(current?.next);
+    if (skipping) handleNext();
     else setIsPlaying(false);
-    setNotice("That video can't be played here, so it was skipped.");
+    setNotice(
+      `${youtubeErrorMessage(code)}${skipping ? " Skipping to the next song." : ""}`,
+    );
   }
 
   function handlePlayerError(message: string) {
