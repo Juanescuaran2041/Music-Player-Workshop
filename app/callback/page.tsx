@@ -29,7 +29,7 @@ export default function SpotifyCallbackPage() {
           <>
             <p className="mb-6 text-rose-600">{error}</p>
             <button onClick={() => router.replace("/")} className="btn-primary">
-              Back to Orbitune
+              Back to BloomMod
             </button>
           </>
         ) : (

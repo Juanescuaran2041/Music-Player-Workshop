@@ -65,7 +65,7 @@ export default function SpotifyPlayer({
     loadSpotifySdk().then((Spotify) => {
       if (cancelled) return;
       player = new Spotify.Player({
-        name: "Orbitune",
+        name: "BloomMod",
         volume: 0.8,
         getOAuthToken: (callback) => {
           getAccessToken()

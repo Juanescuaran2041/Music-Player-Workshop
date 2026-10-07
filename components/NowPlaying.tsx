@@ -49,7 +49,7 @@ export default function NowPlaying({
             ) : (
               <div className="flex h-full w-full items-center justify-center p-1 text-center text-[0.6rem] font-bold leading-tight text-white/90">
                 <span className="line-clamp-3">
-                  {song ? song.title : "Orbitune"}
+                  {song ? song.title : "BloomMod"}
                 </span>
               </div>
             )}

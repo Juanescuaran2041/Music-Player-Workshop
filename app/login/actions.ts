@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { checkProfile } from "@/lib/profile";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 export type AuthState = { error?: string; message?: string };
@@ -24,14 +25,9 @@ export async function signUp(
   formData: FormData,
 ): Promise<AuthState> {
   const nickname = String(formData.get("nickname") ?? "").trim();
-  if (nickname.length < 2 || nickname.length > 24) {
-    return { error: "Nickname must be 2 to 24 characters" };
-  }
-
   const name = String(formData.get("name") ?? "").trim();
-  if (name.length < 2 || name.length > 64) {
-    return { error: "Name must be 2 to 64 characters" };
-  }
+  const problem = checkProfile(nickname, name);
+  if (problem) return { error: problem };
 
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.signUp({
