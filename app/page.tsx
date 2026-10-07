@@ -11,8 +11,9 @@ export default async function Home() {
 
   // Accounts created before nicknames existed fall back to their email
   const metadata = user?.user_metadata;
-  const nickname =
-    typeof metadata?.nickname === "string" ? metadata.nickname : "";
+  const nickname = typeof metadata?.nickname === "string" ? metadata.nickname : "";
+
+  const name = typeof metadata?.name === "string" ? metadata.name : "";
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6">
@@ -33,6 +34,7 @@ export default async function Home() {
             title={user?.email}
           >
             {nickname || user?.email}
+            {name ? ` (${name})` : ""}
           </span>
           <form action={signOut}>
             <button className="btn-ghost">Sign out</button>
