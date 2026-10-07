@@ -28,9 +28,9 @@ export default function LoginForm() {
         className="field"
       />
 
-      {state.error && <p className="text-sm text-rose-300">{state.error}</p>}
+      {state.error && <p className="text-sm text-rose-600">{state.error}</p>}
       {state.message && (
-        <p className="text-sm text-emerald-300">{state.message}</p>
+        <p className="text-sm text-emerald-600">{state.message}</p>
       )}
 
       <button type="submit" disabled={pending} className="btn-primary">

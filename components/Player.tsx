@@ -103,6 +103,18 @@ export default function Player() {
     sync();
   }
 
+  // Moves a song to a new position without changing which song is current
+  function handleMove(id: string, toIndex: number) {
+    const playlist = playlistRef.current;
+    const current = playlist.current;
+    const moved = playlist.remove(id);
+    if (!moved) return;
+
+    playlist.addAt(toIndex, moved);
+    playlist.current = current;
+    sync();
+  }
+
   function handleSelect(song: Song) {
     playlistRef.current.current = song;
     setIsPlaying(true);
@@ -201,7 +213,7 @@ export default function Player() {
           onError={handlePlayerError}
         />
         {notice && (
-          <p role="status" className="text-center text-sm text-rose-300">
+          <p role="status" className="text-center text-sm text-rose-600">
             {notice}
           </p>
         )}
@@ -226,6 +238,7 @@ export default function Player() {
           isPlaying={isPlaying}
           onSelect={handleSelect}
           onRemove={handleRemove}
+          onMove={handleMove}
         />
         <Recommendations
           source={source}

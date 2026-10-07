@@ -8,7 +8,7 @@ type Props = {
 };
 
 const iconButton =
-  "rounded-full p-2 text-muted transition hover:bg-white/10 hover:text-accent-hover";
+  "rounded-full p-2 text-muted transition hover:bg-foreground/10 hover:text-accent-hover";
 
 export default function SongResultList({ songs, onAdd, onPlay }: Props) {
   return (
@@ -16,7 +16,7 @@ export default function SongResultList({ songs, onAdd, onPlay }: Props) {
       {songs.map((song) => (
         <li
           key={song.id}
-          className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-white/5"
+          className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-foreground/5"
         >
           {song.cover ? (
             <img
