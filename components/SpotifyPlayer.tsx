@@ -106,6 +106,16 @@ export default function SpotifyPlayer({
       // at position 0 with the track listed among the previous ones.
       player.addListener("player_state_changed", (state) => {
         if (!state) return;
+
+        // A track can start a moment after its play request succeeded. If the
+        // user switched to a YouTube or imported song (or paused) in between,
+        // the earlier pause landed too soon, so stop it now that it started.
+        const wanted = desiredRef.current;
+        if (!state.paused && (!wanted.uri || !wanted.isPlaying)) {
+          player?.pause().catch(() => {});
+          return;
+        }
+
         const wasPlaying = wasPlayingRef.current;
         wasPlayingRef.current = !state.paused;
 
