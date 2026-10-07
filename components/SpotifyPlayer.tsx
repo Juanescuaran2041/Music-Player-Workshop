@@ -40,6 +40,9 @@ export default function SpotifyPlayer({
     uri: null,
     isPlaying: false,
   });
+  // Pending play requests, chained so only one reaches Spotify at a time
+  const playQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const playRequestRef = useRef(0);
   const handlersRef = useRef({ onTime, onDuration, onEnded, onError });
   const [ready, setReady] = useState(false);
 
@@ -149,19 +152,43 @@ export default function SpotifyPlayer({
     }
 
     loadedUriRef.current = uri;
-    playOnDevice(deviceIdRef.current, uri)
-      .then(() => {
-        // The request can land after the user paused or switched to another
-        // source. Spotify would then start the track on its own, so stop it.
-        const wanted = desiredRef.current;
-        if (!wanted.uri || !wanted.isPlaying) {
-          playerRef.current?.pause().catch(() => {});
+    const deviceId = deviceIdRef.current;
+    const request = ++playRequestRef.current;
+
+    // Requests run one after another. Sent together (e.g. pressing back and
+    // next quickly), Spotify could apply them out of order and keep playing
+    // an older song while the app shows the newer one.
+    playQueueRef.current = playQueueRef.current.then(async () => {
+      // A newer song was picked while this one waited its turn
+      if (
+        request !== playRequestRef.current ||
+        desiredRef.current.uri !== uri
+      ) {
+        return;
+      }
+
+      try {
+        // Going A -> B -> A quickly can leave A already loaded by an earlier
+        // request. Restarting it would jump back to 0:00, so just resume.
+        const state = await playerRef.current?.getCurrentState();
+        if (state?.track_window.current_track.uri === uri) {
+          await playerRef.current?.resume();
+        } else {
+          await playOnDevice(deviceId, uri);
         }
-      })
-      .catch((error: Error) => {
-        loadedUriRef.current = null;
-        handlersRef.current.onError(error.message);
-      });
+      } catch (error) {
+        if (loadedUriRef.current === uri) loadedUriRef.current = null;
+        handlersRef.current.onError((error as Error).message);
+        return;
+      }
+
+      // The request can land after the user paused or switched to another
+      // source. Spotify would then start the track on its own, so stop it.
+      const wanted = desiredRef.current;
+      if (!wanted.uri || !wanted.isPlaying) {
+        playerRef.current?.pause().catch(() => {});
+      }
+    });
   }, [ready, uri, isPlaying]);
 
   useEffect(() => {
