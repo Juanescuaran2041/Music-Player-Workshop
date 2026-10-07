@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orbitune",
-  description: "Orbitune - Spin your sound",
+  title: "BloomMod",
+  description: "BloomMod - Modern audio solutions",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
