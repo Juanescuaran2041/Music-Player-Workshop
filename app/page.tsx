@@ -9,6 +9,11 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Accounts created before nicknames existed fall back to their email
+  const metadata = user?.user_metadata;
+  const nickname =
+    typeof metadata?.nickname === "string" ? metadata.nickname : "";
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6">
       <header className="flex items-center justify-between">
@@ -23,8 +28,11 @@ export default async function Home() {
           <h1 className="text-brand text-2xl font-bold tracking-tight">Orbitune</h1>
         </div>
         <div className="flex items-center gap-4">
-          <span className="hidden text-sm text-muted sm:block">
-            {user?.email}
+          <span
+            className="hidden max-w-48 truncate text-sm text-muted sm:block"
+            title={user?.email}
+          >
+            {nickname || user?.email}
           </span>
           <form action={signOut}>
             <button className="btn-ghost">Sign out</button>
