@@ -7,9 +7,11 @@ import { Playlist } from "@/lib/Playlist";
 import { Song } from "@/lib/Song";
 import { youtubeErrorMessage } from "@/lib/youtubePlayer";
 import { useSpotifyConnected } from "@/lib/spotify/auth";
+import { usePlaylists } from "@/lib/usePlaylists";
 import AddSongForm, { Placement } from "./AddSongForm";
 import ImportAudio from "./ImportAudio";
 import NowPlaying from "./NowPlaying";
+import PlaylistsPanel from "./PlaylistsPanel";
 import Recommendations from "./Recommendations";
 import SearchSongs from "./SearchSongs";
 import SongList from "./SongList";
@@ -31,6 +33,11 @@ export default function Player() {
   const [source, setSource] = useState<Source>("youtube");
   const connected = useSpotifyConnected();
   const [notice, setNotice] = useState("");
+  const playlists = usePlaylists();
+  const picker = {
+    playlists: playlists.playlists,
+    onAdd: playlists.addSong,
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -150,6 +157,23 @@ export default function Player() {
     handleSelect(copy);
   }
 
+  // Replaces the queue with a saved playlist and starts from its first song
+  function handlePlayPlaylist(saved: Song[]) {
+    if (saved.length === 0) return;
+    for (const song of playlistRef.current.toArray()) {
+      if (song.url.startsWith("blob:")) URL.revokeObjectURL(song.url);
+    }
+
+    // The saved songs are nodes of the playlist's own list, so the queue
+    // gets copies instead of relinking them
+    const queue = new Playlist();
+    for (const song of saved) queue.addLast(copyOf(song));
+    queue.current = queue.head;
+    playlistRef.current = queue;
+    setIsPlaying(true);
+    sync();
+  }
+
   function handleNext() {
     playlistRef.current.next();
     sync();
@@ -252,6 +276,7 @@ export default function Player() {
           connected={connected}
           onAdd={handleExternalAdd}
           onPlay={handleExternalPlay}
+          picker={picker}
         />
         <SongList
           songs={songs}
@@ -261,6 +286,11 @@ export default function Player() {
           onRemove={handleRemove}
           onMove={handleMove}
         />
+        <PlaylistsPanel
+          playlists={playlists}
+          queue={songs}
+          onPlay={handlePlayPlaylist}
+        />
         <Recommendations
           source={source}
           connected={connected}
@@ -268,6 +298,7 @@ export default function Player() {
           queue={songs}
           onAdd={handleExternalAdd}
           onPlay={handleExternalPlay}
+          picker={picker}
         />
       </div>
     </div>

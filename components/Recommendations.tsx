@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { searchSongs, songSourceId, Source } from "@/lib/music";
 import { Song } from "@/lib/Song";
 import { recommendationQuery, seedTerm } from "@/lib/recommendations";
-import SongResultList from "./SongResultList";
+import SongResultList, { PlaylistPicker } from "./SongResultList";
 
 type Props = {
   source: Source;
@@ -13,6 +13,7 @@ type Props = {
   queue: Song[];
   onAdd: (song: Song) => void;
   onPlay: (song: Song) => void;
+  picker?: PlaylistPicker;
 };
 
 type Result = { key: string; songs: Song[]; error: string };
@@ -24,6 +25,7 @@ export default function Recommendations({
   queue,
   onAdd,
   onPlay,
+  picker,
 }: Props) {
   const query = recommendationQuery(seed);
   const key = `${source}:${query}`;
@@ -78,7 +80,12 @@ export default function Recommendations({
           No new suggestions right now.
         </p>
       ) : (
-        <SongResultList songs={suggestions} onAdd={onAdd} onPlay={onPlay} />
+        <SongResultList
+          songs={suggestions}
+          onAdd={onAdd}
+          onPlay={onPlay}
+          picker={picker}
+        />
       )}
     </section>
   );
