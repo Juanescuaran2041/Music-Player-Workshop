@@ -23,10 +23,17 @@ export async function signUp(
   _prev: AuthState,
   formData: FormData,
 ): Promise<AuthState> {
+  const nickname = String(formData.get("nickname") ?? "").trim();
+  if (nickname.length < 2 || nickname.length > 24) {
+    return { error: "Nickname must be 2 to 24 characters" };
+  }
+
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.signUp({
     email: String(formData.get("email")),
     password: String(formData.get("password")),
+    // Stored in the user's metadata, so no database changes are needed
+    options: { data: { nickname } },
   });
 
   if (error) return { error: error.message };
