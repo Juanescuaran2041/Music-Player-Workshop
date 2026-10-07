@@ -20,7 +20,7 @@ export default async function Home() {
             height={440}
             className="h-12 w-14 rounded-xl object-cover"
           />
-          <h1 className="text-brand text-2xl font-bold tracking-tight">Spyre</h1>
+          <h1 className="text-brand text-2xl font-bold tracking-tight">Orbitune</h1>
         </div>
         <div className="flex items-center gap-4">
           <span className="hidden text-sm text-muted sm:block">
