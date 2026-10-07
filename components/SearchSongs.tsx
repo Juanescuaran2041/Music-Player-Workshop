@@ -3,13 +3,14 @@
 import { FormEvent, useState } from "react";
 import { searchSongs, Source } from "@/lib/music";
 import { Song } from "@/lib/Song";
-import SongResultList from "./SongResultList";
+import SongResultList, { PlaylistPicker } from "./SongResultList";
 
 type Props = {
   source: Source;
   connected: boolean;
   onAdd: (song: Song) => void;
   onPlay: (song: Song) => void;
+  picker?: PlaylistPicker;
 };
 
 type State =
@@ -23,6 +24,7 @@ export default function SearchSongs({
   connected,
   onAdd,
   onPlay,
+  picker,
 }: Props) {
   const [query, setQuery] = useState("");
   const [state, setState] = useState<State>({ status: "idle" });
@@ -87,6 +89,7 @@ export default function SearchSongs({
               songs={state.songs}
               onAdd={onAdd}
               onPlay={onPlay}
+              picker={picker}
             />
           )}
         </div>
