@@ -46,7 +46,7 @@ export default function SearchSongs({
   }
 
   return (
-    <section className="rounded-3xl bg-surface/80 p-4 ring-1 ring-foreground/10 sm:p-6">
+    <section className="card p-4 sm:p-6">
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           value={query}

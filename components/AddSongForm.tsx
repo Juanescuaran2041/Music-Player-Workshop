@@ -48,7 +48,7 @@ export default function AddSongForm({ size, onAdd }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-3xl bg-surface/80 p-6 ring-1 ring-foreground/10"
+      className="card flex flex-col gap-3 p-6"
     >
       <h2 className="text-lg font-semibold">Add a song</h2>
 
