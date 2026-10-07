@@ -31,6 +31,7 @@ export default function YouTubeEmbed({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const isPlayingRef = useRef(isPlaying);
+  const videoIdRef = useRef(videoId);
   const handlersRef = useRef({
     onPlayingChange,
     onTime,
@@ -43,6 +44,7 @@ export default function YouTubeEmbed({
   // Keep the latest values readable from the player callbacks
   useEffect(() => {
     isPlayingRef.current = isPlaying;
+    videoIdRef.current = videoId;
     handlersRef.current = {
       onPlayingChange,
       onTime,
@@ -80,6 +82,14 @@ export default function YouTubeEmbed({
             setReady(true);
           },
           onStateChange: ({ data }) => {
+            // Another source is current: a video that starts late (it was
+            // still loading when the user switched) must not play over it,
+            // and its events must not pause or resume the other source.
+            if (!videoIdRef.current) {
+              if (data === YT_STATE.PLAYING) player?.stopVideo();
+              return;
+            }
+
             const handlers = handlersRef.current;
             if (data === YT_STATE.PLAYING) handlers.onPlayingChange(true);
             else if (data === YT_STATE.PAUSED) handlers.onPlayingChange(false);
