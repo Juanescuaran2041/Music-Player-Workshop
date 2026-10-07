@@ -15,6 +15,13 @@
     #ec4899 70%,
     #ff8a3d 100%
   );
+  /* Text uses a calmer gradient: the full one reads too much like Instagram */
+  --brand-text-gradient: linear-gradient(
+    120deg,
+    #0e8fa6 0%,
+    #2563eb 55%,
+    #7c3aed 100%
+  );
 }
 
 @theme inline {
@@ -49,7 +56,7 @@ body {
 }
 
 .text-brand {
-  background: var(--brand-gradient);
+  background: var(--brand-text-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
