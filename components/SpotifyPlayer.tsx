@@ -87,9 +87,12 @@ export default function SpotifyPlayer({
       player.addListener("initialization_error", ({ message }) =>
         handlersRef.current.onError(message),
       );
-      player.addListener("playback_error", ({ message }) =>
-        handlersRef.current.onError(message),
-      );
+      player.addListener("playback_error", ({ message }) => {
+        // Pausing an empty player is harmless, so it should not surface
+        if (!/no list was loaded/i.test(message)) {
+          handlersRef.current.onError(message);
+        }
+      });
 
       // The SDK has no "ended" event: a finished track shows up as paused
       // at position 0 with the track listed among the previous ones.
@@ -129,7 +132,8 @@ export default function SpotifyPlayer({
     if (!ready || !player || !deviceIdRef.current) return;
 
     if (!uri || !isPlaying) {
-      player.pause().catch(() => {});
+      // Nothing to pause until a track has been loaded on this device
+      if (loadedUriRef.current) player.pause().catch(() => {});
       if (!uri) loadedUriRef.current = null;
       return;
     }
