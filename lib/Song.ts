@@ -9,5 +9,6 @@ export class Song {
     public duration: number,
     public url: string,
     public cover: string = "",
+    public videoId: string = "",
   ) {}
 }
