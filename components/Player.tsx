@@ -7,6 +7,7 @@ import { Song } from "@/lib/Song";
 import AddSongForm, { Placement } from "./AddSongForm";
 import ImportAudio from "./ImportAudio";
 import NowPlaying from "./NowPlaying";
+import Recommendations from "./Recommendations";
 import SongList from "./SongList";
 
 export default function Player() {
@@ -74,6 +75,16 @@ export default function Player() {
     sync();
   }
 
+  function handleRecommendationAdd(song: Song) {
+    enqueue(song, "end");
+    sync();
+  }
+
+  function handleRecommendationPlay(song: Song) {
+    enqueue(song, "end");
+    handleSelect(song);
+  }
+
   function handleNext() {
     playlistRef.current.next();
     sync();
@@ -119,13 +130,21 @@ export default function Player() {
         <ImportAudio onFiles={handleImport} />
         <AddSongForm size={songs.length} onAdd={handleAdd} />
       </div>
-      <SongList
-        songs={songs}
-        currentId={current?.id ?? null}
-        isPlaying={isPlaying}
-        onSelect={handleSelect}
-        onRemove={handleRemove}
-      />
+      <div className="flex flex-col gap-6">
+        <SongList
+          songs={songs}
+          currentId={current?.id ?? null}
+          isPlaying={isPlaying}
+          onSelect={handleSelect}
+          onRemove={handleRemove}
+        />
+        <Recommendations
+          seed={current}
+          queue={songs}
+          onAdd={handleRecommendationAdd}
+          onPlay={handleRecommendationPlay}
+        />
+      </div>
     </div>
   );
 }
