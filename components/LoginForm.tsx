@@ -12,6 +12,17 @@ export default function LoginForm() {
 
   return (
     <form action={action} className="flex flex-col gap-4">
+      {isSignUp && (
+        <input
+          name="nickname"
+          placeholder="Nickname"
+          minLength={2}
+          maxLength={24}
+          autoComplete="nickname"
+          required
+          className="field"
+        />
+      )}
       <input
         name="email"
         type="email"
