@@ -35,6 +35,11 @@ export default function SpotifyPlayer({
   const deviceIdRef = useRef("");
   const loadedUriRef = useRef<string | null>(null);
   const wasPlayingRef = useRef(false);
+  // What the app wants right now, so late responses can be corrected
+  const desiredRef = useRef<{ uri: string | null; isPlaying: boolean }>({
+    uri: null,
+    isPlaying: false,
+  });
   const handlersRef = useRef({ onTime, onDuration, onEnded, onError });
   const [ready, setReady] = useState(false);
 
@@ -129,6 +134,7 @@ export default function SpotifyPlayer({
 
   useEffect(() => {
     const player = playerRef.current;
+    desiredRef.current = { uri, isPlaying };
     if (!ready || !player || !deviceIdRef.current) return;
 
     if (!uri || !isPlaying) {
@@ -143,10 +149,19 @@ export default function SpotifyPlayer({
     }
 
     loadedUriRef.current = uri;
-    playOnDevice(deviceIdRef.current, uri).catch((error: Error) => {
-      loadedUriRef.current = null;
-      handlersRef.current.onError(error.message);
-    });
+    playOnDevice(deviceIdRef.current, uri)
+      .then(() => {
+        // The request can land after the user paused or switched to another
+        // source. Spotify would then start the track on its own, so stop it.
+        const wanted = desiredRef.current;
+        if (!wanted.uri || !wanted.isPlaying) {
+          playerRef.current?.pause().catch(() => {});
+        }
+      })
+      .catch((error: Error) => {
+        loadedUriRef.current = null;
+        handlersRef.current.onError(error.message);
+      });
   }, [ready, uri, isPlaying]);
 
   useEffect(() => {
