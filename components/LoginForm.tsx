@@ -29,7 +29,7 @@ export default function LoginForm({ callbackError }: Props) {
         <button
           type="submit"
           disabled={googlePending}
-          className="btn-ghost flex w-full items-center justify-center gap-2"
+          className="btn-ghost flex w-full items-center justify-center gap-2 py-3 font-medium"
         >
           <GoogleIcon />
           {googlePending ? "Redirecting..." : "Continue with Google"}
@@ -108,7 +108,7 @@ export default function LoginForm({ callbackError }: Props) {
         <button
           type="submit"
           disabled={pending || (isSignUp && !strongPassword)}
-          className="btn-primary"
+          className="btn-primary mt-1"
         >
           {pending ? "Loading..." : isSignUp ? "Create account" : "Sign in"}
         </button>
