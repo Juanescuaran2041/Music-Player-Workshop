@@ -108,10 +108,12 @@ export default function YouTubeEmbed({
 
   useEffect(() => {
     const player = playerRef.current;
-    if (!ready || !player) return;
+    // With no video selected (another source is playing) the player must stay
+    // stopped: playVideo() would bring back the last video loaded.
+    if (!ready || !player || !videoId) return;
     if (isPlaying) player.playVideo();
     else player.pauseVideo();
-  }, [ready, isPlaying]);
+  }, [ready, videoId, isPlaying]);
 
   useEffect(() => {
     if (!ready || !videoId) return;
