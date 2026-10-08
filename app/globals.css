@@ -24,6 +24,39 @@
   );
 }
 
+:root[data-theme="dark"] {
+  --background: #0f1424;
+  --surface: #1a2238;
+  --foreground: #eef3ff;
+  --muted: #9aa6c8;
+  --accent: #22c1d4;
+  --accent-hover: #5ddbe9;
+  --on-accent: #08202b;
+  --brand-text-gradient: linear-gradient(
+    120deg,
+    #22c1d4 0%,
+    #60a5fa 55%,
+    #a78bfa 100%
+  );
+}
+
+.theme-dark-only,
+:root[data-theme="dark"] .theme-light-only {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-dark-only {
+  display: block;
+}
+
+:root[data-theme="dark"] .text-rose-600 {
+  color: #fb7185;
+}
+
+:root[data-theme="dark"] .text-emerald-600 {
+  color: #34d399;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -301,7 +334,7 @@ body {
 /* Login card: brighter fields and buttons that sit well on the frosted glass */
 .login-card .field,
 .login-card .btn-ghost {
-  background: rgb(255 255 255 / 0.75);
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
 }
 
 .login-card .btn-ghost {
@@ -312,7 +345,7 @@ body {
 }
 
 .login-card .btn-ghost:hover {
-  background: #ffffff;
+  background: var(--surface);
 }
 
 .login-card .btn-primary {

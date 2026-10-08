@@ -4,6 +4,7 @@ import { signOut } from "@/app/login/actions";
 import { displayName, initials, Profile } from "@/lib/profile";
 import Avatar from "./Avatar";
 import NavLinks from "./NavLinks";
+import ThemeToggle from "./ThemeToggle";
 
 type Props = {
   profile: Profile;
@@ -29,6 +30,7 @@ export default function AppHeader({ profile }: Props) {
       <NavLinks />
 
       <div className="flex items-center gap-3">
+        <ThemeToggle />
         <Link
           href="/profile"
           title={profile.email}
