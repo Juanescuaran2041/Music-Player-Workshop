@@ -3,7 +3,6 @@
 import AddSongForm from "./AddSongForm";
 import ImportAudio from "./ImportAudio";
 import NowPlaying from "./NowPlaying";
-import PlaylistsPanel from "./PlaylistsPanel";
 import { usePlayer } from "./player/PlayerProvider";
 import VideoSlot from "./player/VideoSlot";
 import Recommendations from "./Recommendations";
@@ -58,11 +57,6 @@ export default function Player() {
           onSelect={player.select}
           onRemove={player.remove}
           onMove={player.move}
-        />
-        <PlaylistsPanel
-          playlists={player.playlists}
-          queue={player.songs}
-          onPlay={player.playPlaylist}
         />
         <Recommendations
           source={player.source}
