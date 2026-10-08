@@ -4,7 +4,7 @@ import { Song } from "./Song";
 import { createBrowserSupabase } from "./supabase/client";
 
 // What each song looks like inside the "songs" JSON column
-type StoredSong = {
+export type StoredSong = {
   title: string;
   artist: string;
   duration: number;
@@ -62,7 +62,7 @@ export function cloneSong(song: Song): Song {
   );
 }
 
-function toStored(song: Song): StoredSong {
+export function toStored(song: Song): StoredSong {
   return {
     title: song.title,
     artist: song.artist,

@@ -11,7 +11,14 @@ export default function AppBackground() {
         fill
         priority
         sizes="100vw"
-        className="object-cover"
+        className="theme-light-only object-cover"
+      />
+      <Image
+        src="/brand/bloommod-bg.jpg"
+        alt=""
+        fill
+        sizes="100vw"
+        className="theme-dark-only object-cover"
       />
       {/* Softens the artwork so text and panels on top stay easy to read */}
       <div className="absolute inset-0 bg-background/55" />

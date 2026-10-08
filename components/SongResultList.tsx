@@ -128,7 +128,7 @@ export default function SongResultList({
             <div className="result-in flex basis-full flex-wrap items-center gap-1.5 pl-15">
               {picker.playlists.length === 0 ? (
                 <span className="text-xs text-muted">
-                  Create a playlist in My playlists first.
+                  Create a playlist in the Playlists tab first.
                 </span>
               ) : (
                 <>

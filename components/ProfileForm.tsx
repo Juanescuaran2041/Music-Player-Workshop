@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { updateProfile } from "@/app/profile/actions";
+import { updateProfile } from "@/app/(main)/profile/actions";
 
 type Props = {
   nickname: string;
