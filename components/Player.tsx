@@ -5,6 +5,7 @@ import { getAudioDuration } from "@/lib/audio";
 import { songSourceId, Source } from "@/lib/music";
 import { Playlist } from "@/lib/Playlist";
 import { Song } from "@/lib/Song";
+import { usePlayTracker } from "@/lib/stats/usePlayTracker";
 import { youtubeErrorMessage } from "@/lib/youtubePlayer";
 import { useSpotifyConnected } from "@/lib/spotify/auth";
 import { usePlaylists } from "@/lib/usePlaylists";
@@ -38,6 +39,7 @@ export default function Player() {
     playlists: playlists.playlists,
     onAdd: playlists.addSong,
   };
+  usePlayTracker(current, currentTime, isPlaying);
 
   useEffect(() => {
     const audio = audioRef.current;
