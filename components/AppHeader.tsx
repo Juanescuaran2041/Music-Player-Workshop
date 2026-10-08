@@ -3,24 +3,13 @@ import Link from "next/link";
 import { signOut } from "@/app/login/actions";
 import { displayName, initials, Profile } from "@/lib/profile";
 import Avatar from "./Avatar";
-
-type Section = "player" | "stats" | "profile";
+import NavLinks from "./NavLinks";
 
 type Props = {
   profile: Profile;
-  active: Section;
 };
 
-const sections: { id: Section; href: string; label: string }[] = [
-  { id: "player", href: "/", label: "Player" },
-  { id: "stats", href: "/stats", label: "Stats" },
-  { id: "profile", href: "/profile", label: "My profile" },
-];
-
-const navLink =
-  "rounded-full px-4 py-1.5 text-sm transition-colors hover:text-foreground";
-
-export default function AppHeader({ profile, active }: Props) {
+export default function AppHeader({ profile }: Props) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-surface/70 px-4 py-3 shadow-sm shadow-slate-900/5 ring-1 ring-foreground/10 backdrop-blur">
       <Link href="/" className="flex items-center gap-3">
@@ -37,22 +26,7 @@ export default function AppHeader({ profile, active }: Props) {
         </span>
       </Link>
 
-      <nav className="flex items-center gap-1 rounded-full bg-foreground/5 p-1">
-        {sections.map(({ id, href, label }) => (
-          <Link
-            key={id}
-            href={href}
-            aria-current={active === id ? "page" : undefined}
-            className={`${navLink} ${
-              active === id
-                ? "bg-accent font-semibold text-on-accent hover:text-on-accent"
-                : "text-muted"
-            }`}
-          >
-            {label}
-          </Link>
-        ))}
-      </nav>
+      <NavLinks />
 
       <div className="flex items-center gap-3">
         <Link
