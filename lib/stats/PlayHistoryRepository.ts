@@ -21,11 +21,22 @@ export class PlayHistoryRepository {
     private readonly client: SupabaseClient = createBrowserSupabase(),
   ) {}
 
-  async record(play: Play): Promise<void> {
+  async record(play: Play): Promise<string> {
+    const { data, error } = await this.client
+      .from(PlayHistoryRepository.TABLE)
+      .insert(this.toRow(play))
+      .select("id")
+      .single();
+    if (error) throw this.toError(error, "save this play");
+    return (data as { id: string }).id;
+  }
+
+  async updateSeconds(id: string, seconds: number): Promise<void> {
     const { error } = await this.client
       .from(PlayHistoryRepository.TABLE)
-      .insert(this.toRow(play));
-    if (error) throw this.toError(error, "save this play");
+      .update({ seconds: Math.round(seconds) })
+      .eq("id", id);
+    if (error) throw this.toError(error, "update this play");
   }
 
   async loadSince(since: Date | null): Promise<Play[]> {

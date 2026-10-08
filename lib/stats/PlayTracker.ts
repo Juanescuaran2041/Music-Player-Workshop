@@ -8,6 +8,8 @@ type Session = {
   startedAt: Date;
   listened: number;
   lastTime: number;
+  recordedSeconds: number;
+  playId: Promise<string | null> | null;
 };
 
 export class PlayTracker {
@@ -38,17 +40,33 @@ export class PlayTracker {
       session.listened += step;
     }
     session.lastTime = currentTime;
+
+    if (!session.playId && this.qualifies(session)) {
+      session.recordedSeconds = session.listened;
+      session.playId = this.record(session);
+    }
   }
 
   flush(): void {
     const session = this.session;
     this.session = null;
-    if (!session || session.listened < this.thresholdFor(session.song)) return;
-    void this.record(session);
+    if (!session?.playId || session.listened <= session.recordedSeconds) return;
+    void this.updateSeconds(session.playId, session.listened);
   }
 
   private start(song: Song, currentTime: number): Session {
-    return { song, startedAt: new Date(), listened: 0, lastTime: currentTime };
+    return {
+      song,
+      startedAt: new Date(),
+      listened: 0,
+      lastTime: currentTime,
+      recordedSeconds: 0,
+      playId: null,
+    };
+  }
+
+  private qualifies(session: Session): boolean {
+    return session.listened >= this.thresholdFor(session.song);
   }
 
   private restarted(currentTime: number): boolean {
@@ -57,7 +75,7 @@ export class PlayTracker {
       session !== null &&
       currentTime < PlayTracker.RESTART_SECONDS &&
       session.lastTime - currentTime > PlayTracker.RESTART_SECONDS &&
-      session.listened >= this.thresholdFor(session.song)
+      this.qualifies(session)
     );
   }
 
@@ -67,11 +85,11 @@ export class PlayTracker {
       : PlayTracker.MIN_SECONDS;
   }
 
-  private async record(session: Session): Promise<void> {
+  private async record(session: Session): Promise<string | null> {
     const { song, startedAt, listened } = session;
     try {
       const genre = await this.genres.resolve(song.title, song.artist);
-      await this.repository.record(
+      return await this.repository.record(
         new Play(
           song.title,
           song.artist,
@@ -82,7 +100,24 @@ export class PlayTracker {
         ),
       );
     } catch (error) {
-      this.onError(error instanceof Error ? error : new Error(String(error)));
+      this.report(error);
+      return null;
     }
+  }
+
+  private async updateSeconds(
+    playId: Promise<string | null>,
+    seconds: number,
+  ): Promise<void> {
+    try {
+      const id = await playId;
+      if (id) await this.repository.updateSeconds(id, seconds);
+    } catch (error) {
+      this.report(error);
+    }
+  }
+
+  private report(error: unknown): void {
+    this.onError(error instanceof Error ? error : new Error(String(error)));
   }
 }
