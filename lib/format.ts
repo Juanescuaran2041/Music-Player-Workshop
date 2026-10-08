@@ -8,6 +8,7 @@ export function formatListeningTime(totalSeconds: number): string {
   const totalMinutes = Math.floor(totalSeconds / 60);
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
+  if (totalSeconds > 0 && totalMinutes === 0) return "< 1 min";
   if (hours === 0) return `${minutes} min`;
   return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
 }
