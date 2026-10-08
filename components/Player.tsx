@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getAudioDuration } from "@/lib/audio";
 import { songSourceId, Source } from "@/lib/music";
 import { Playlist } from "@/lib/Playlist";
+import { QueueStorage } from "@/lib/QueueStorage";
 import { Song } from "@/lib/Song";
 import { usePlayTracker } from "@/lib/stats/usePlayTracker";
 import { youtubeErrorMessage } from "@/lib/youtubePlayer";
@@ -22,6 +23,7 @@ import YouTubeEmbed, { YouTubeEmbedHandle } from "./YouTubeEmbed";
 
 export default function Player() {
   const playlistRef = useRef(new Playlist());
+  const queueStorageRef = useRef(new QueueStorage());
   const lastCurrentRef = useRef<Song | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const embedRef = useRef<YouTubeEmbedHandle>(null);
@@ -48,8 +50,14 @@ export default function Player() {
     else audio.pause();
   }, [isPlaying, current]);
 
+  useEffect(() => {
+    playlistRef.current = queueStorageRef.current.load();
+    sync();
+  }, []);
+
   function sync() {
     const playlist = playlistRef.current;
+    queueStorageRef.current.save(playlist);
     setSongs(playlist.toArray());
     setCurrent(playlist.current);
 
