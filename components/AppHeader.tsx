@@ -4,10 +4,18 @@ import { signOut } from "@/app/login/actions";
 import { displayName, initials, Profile } from "@/lib/profile";
 import Avatar from "./Avatar";
 
+type Section = "player" | "stats" | "profile";
+
 type Props = {
   profile: Profile;
-  active: "player" | "profile";
+  active: Section;
 };
+
+const sections: { id: Section; href: string; label: string }[] = [
+  { id: "player", href: "/", label: "Player" },
+  { id: "stats", href: "/stats", label: "Stats" },
+  { id: "profile", href: "/profile", label: "My profile" },
+];
 
 const navLink =
   "rounded-full px-4 py-1.5 text-sm transition-colors hover:text-foreground";
@@ -30,28 +38,20 @@ export default function AppHeader({ profile, active }: Props) {
       </Link>
 
       <nav className="flex items-center gap-1 rounded-full bg-foreground/5 p-1">
-        <Link
-          href="/"
-          aria-current={active === "player" ? "page" : undefined}
-          className={`${navLink} ${
-            active === "player"
-              ? "bg-accent font-semibold text-on-accent hover:text-on-accent"
-              : "text-muted"
-          }`}
-        >
-          Player
-        </Link>
-        <Link
-          href="/profile"
-          aria-current={active === "profile" ? "page" : undefined}
-          className={`${navLink} ${
-            active === "profile"
-              ? "bg-accent font-semibold text-on-accent hover:text-on-accent"
-              : "text-muted"
-          }`}
-        >
-          My profile
-        </Link>
+        {sections.map(({ id, href, label }) => (
+          <Link
+            key={id}
+            href={href}
+            aria-current={active === id ? "page" : undefined}
+            className={`${navLink} ${
+              active === id
+                ? "bg-accent font-semibold text-on-accent hover:text-on-accent"
+                : "text-muted"
+            }`}
+          >
+            {label}
+          </Link>
+        ))}
       </nav>
 
       <div className="flex items-center gap-3">
